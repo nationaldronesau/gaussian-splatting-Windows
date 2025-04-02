@@ -86,7 +86,7 @@ You will need to pull a copy of the code from GitHub. You will do this by using 
 1. Open Windows Command Prompt by tying "cmd" into your search bar.
 2. Copy the below code into command prompt and press enter
 
-```git clone https://github.com/graphdeco-inria/gaussian-splatting --recursive```
+```git clone https://github.com/jonstephens85/gaussian-splatting-Windows.git --recursive```
 
 The folder will download to the root of our command line prompt with the name "Gaussian-Splatting". Typically in your ```C:User/<username>``` folder. For example, on my PC the folder is now located at C:User/Jonat/Guassian-Splatting
 
@@ -98,6 +98,9 @@ To install the code that you pulled from GitHub, you will need to create a Conda
 SET DISTUTILS_USE_SDK=1
 conda env create --file environment.yml
 conda activate gaussian_splatting
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu118
+pip install ./submodules/diff-gaussian-rasterization
+pip install ./submodules/simple-knn
 ```
 Please note that this process assumes that you have CUDA SDK **11** installed, not **12**. For modifications, see below.
 
@@ -382,8 +385,8 @@ python nerfstudio/scripts/gaussian_splatting/render.py camera-path \
 ```shell
 conda activate gaussian_splatting
 cd <dir_to_repo>/gaussian-splatting
-pip install submodules\diff-gaussian-rasterization
-pip install submodules\simple-knn
+pip install .\submodules\diff-gaussian-rasterization
+pip install .\submodules\simple-knn
 ```
 I will make a tutorial video soon on how to troubleshoot common installation problems. In the meantime, keep asking questions in the main GitHub repo and I'll jump on when I can to answer questions.
 
