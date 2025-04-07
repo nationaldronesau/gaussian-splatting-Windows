@@ -28,6 +28,15 @@ colmap_command = '"{}"'.format(args.colmap_executable) if len(args.colmap_execut
 magick_command = '"{}"'.format(args.magick_executable) if len(args.magick_executable) > 0 else "magick"
 use_gpu = 1 if not args.no_gpu else 0
 
+# Configure logging to log to both file and terminal
+log_file_path = os.path.join(args.source_path, "conversion_log.txt")
+logging.basicConfig(filename=log_file_path, level=logging.INFO, format="%(asctime)s - %(message)s")
+
+def log_and_print(message):
+    """Log message to both the file and terminal."""
+    logging.info(message)
+    print(message)
+
 if not args.skip_matching:
     os.makedirs(args.source_path + "/distorted/sparse", exist_ok=True)
 
