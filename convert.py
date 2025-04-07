@@ -41,13 +41,14 @@ if not args.skip_matching:
     os.makedirs(args.source_path + "/distorted/sparse", exist_ok=True)
 
     ## Feature extraction
-    feat_extracton_cmd = colmap_command + " feature_extractor "\
-        "--database_path " + args.source_path + "/distorted/database.db \
-        --image_path " + args.source_path + "/input \
-        --ImageReader.single_camera 1 \
-        --ImageReader.camera_model " + args.camera + " \
-        --SiftExtraction.use_gpu " + str(use_gpu)
-    exit_code = os.system(feat_extracton_cmd)
+    log_and_print("Starting feature extraction...")
+    feat_extraction_cmd = colmap_command + " feature_extractor "\
+        "--database_path " + args.source_path + "/distorted/database.db " \
+        "--image_path " + args.source_path + "/input " \
+        "--ImageReader.single_camera 1 " \
+        "--ImageReader.camera_model " + args.camera + " " \
+        "--SiftExtraction.use_gpu " + str(use_gpu) + " " \
+        "--SiftExtraction.max_image_size 3000"
     if exit_code != 0:
         logging.error(f"Feature extraction failed with code {exit_code}. Exiting.")
         exit(exit_code)
