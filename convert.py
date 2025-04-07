@@ -49,27 +49,39 @@ if not args.skip_matching:
         "--ImageReader.camera_model " + args.camera + " " \
         "--SiftExtraction.use_gpu " + str(use_gpu) + " " \
         "--SiftExtraction.max_image_size 3000"
+    exit_code = os.system(feat_extraction_cmd)
     if exit_code != 0:
-        logging.error(f"Feature extraction failed with code {exit_code}. Exiting.")
+        log_and_print(f"ERROR: Feature extraction failed with code {exit_code}. Exiting.")
         exit(exit_code)
 
     ## Feature matching
-    feat_matching_cmd = colmap_command + " exhaustive_matcher \
-        --database_path " + args.source_path + "/distorted/database.db \
-        --SiftMatching.use_gpu " + str(use_gpu)
+    log_and_print("Starting feature matching...")
+    feat_matching_cmd = colmap_command + " exhaustive_matcher " \
+        "--database_path " + args.source_path + "/distorted/database.db " \
+        "--SiftMatching.use_gpu " + str(use_gpu)
     exit_code = os.system(feat_matching_cmd)
     if exit_code != 0:
-        logging.error(f"Feature matching failed with code {exit_code}. Exiting.")
+        log_and_print(f"ERROR: Feature matching failed with code {exit_code}. Exiting.")
         exit(exit_code)
 
-    ### Bundle adjustment
-    # The default Mapper tolerance is unnecessarily large,
-    # decreasing it speeds up bundle adjustment steps.
-    mapper_cmd = (colmap_command + " mapper \
-        --database_path " + args.source_path + "/distorted/database.db \
-        --image_path "  + args.source_path + "/input \
-        --output_path "  + args.source_path + "/distorted/sparse \
-        --Mapper.ba_global_function_tolerance=0.000001")
+    ## Sparse reconstruction (Mapper)
+    log_and_print("Starting mapping (bundle adjustment)...")
+    mapper_cmd = (colmap_command + " mapper " \
+        "--database_path " + args.source_path + "/distorted/database.db " \
+        "--image_path "  + args.source_path + "/input " \
+        "--output_path "  + args.source_path + "/distorted/sparse " \
+        "--Mapper.ba_global_function_tolerance=0.000001 " \
+        "--Mapper.ba_global_max_num_iterations=50 " \
+        "--Mapper.ba_local_max_num_iterations=25 " \
+        "--Mapper.tri_ignore_two_view_tracks=1 " \
+        "--Mapper.multiple_models=0 " \
+        "--Mapper.max_num_models=1 " \
+        "--Mapper.init_num_trials=200 " \
+        "--Mapper.abs_pose_min_num_inliers=30 " \
+        "--Mapper.abs_pose_min_inlier_ratio=0.15 " \
+        "--Mapper.min_focal_length_ratio=0.1 " \
+        "--Mapper.max_focal_length_ratio=10 " \
+        "--Mapper.num_threads=4")
     exit_code = os.system(mapper_cmd)
     if exit_code != 0:
         logging.error(f"Mapper failed with code {exit_code}. Exiting.")
