@@ -1,3 +1,5 @@
 # Other pip dependencies
 ./submodules/diff-gaussian-rasterization
 ./submodules/simple-knn
+pycolmap==3.11.1
+psutil==7.0.0
