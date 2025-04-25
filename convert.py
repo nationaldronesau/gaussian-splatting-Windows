@@ -63,7 +63,7 @@ if not args.skip_matching:
 
     log_and_print("Starting feature matching...")
     feat_matching_cmd = (
-        f"{colmap_command} sequential_matcher "
+        f"{colmap_command} exhaustive_matcher "
         f"--database_path {args.source_path}/distorted/database.db "
         f"--SiftMatching.use_gpu {use_gpu}"
     )
